@@ -1,0 +1,6 @@
+opencv-python
+pytesseract
+Pillow
+keyboard
+accessible_output2
+pyautogui
