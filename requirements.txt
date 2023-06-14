@@ -4,3 +4,4 @@ Pillow
 keyboard
 accessible_output2
 pyautogui
+numpy

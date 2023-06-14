@@ -4,7 +4,7 @@ import pytesseract
 import keyboard
 import pyautogui
 from PIL import Image
-
+import numpy
 import accessible_output2.outputs.auto
       
 class GameReader:
@@ -48,20 +48,19 @@ class GameReader:
         self.image = self.CV2PIL(imCrop)
         cv2.destroyAllWindows()
     
-    def PIL2CV(img):
-        """ PIL image to CV2 image """
-        return img
-      
-    def CV2PIL(img):
-        """ CV2 image to PIL image """
-        return img
-
     def read(self):
         """ Read the image and output the text to screen reader """
         text = pytesseract.image_to_string(self.CV2PIL(self.image))
         #print(text)
         engine = accessible_output2.outputs.auto.Auto()
         engine.speak(text)
+
+    def CV2PIL(self, img: numpy.ndarray) -> Image:
+        return Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+
+
+    def PIL2CV(self,img: Image) -> numpy.ndarray:
+        return cv2.cvtColor(numpy.array(img), cv2.COLOR_RGB2BGR)
 
 
 if __name__ == '__main__':
@@ -71,10 +70,13 @@ if __name__ == '__main__':
         if keyboard.is_pressed('insert'):
             reader.capture("camera")
             reader.crop()
+            reader.read()
         elif keyboard.is_pressed('end'):
             reader.capture("screenshot")
             reader.crop()
+            reader.read()
         elif keyboard.is_pressed('home'):
             reader.capture("screenshot")
             reader.crop(False)
-        reader.read()
+            reader.read()
+        
